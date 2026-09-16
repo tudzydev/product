@@ -1,5 +1,7 @@
 import { Product } from "@/types/productType";
 
+export type { Product };
+
 const BACKEND_URL = "http://localhost:5001/api/products";
 
 export const productService = {

@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { productService, Product } from "@/services/productService";
+import { productService } from "@/services/productService";
+import { Product } from "@/types/productType";
 
 interface Toast {
   id: string;
