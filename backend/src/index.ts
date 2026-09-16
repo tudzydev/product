@@ -1,3 +1,4 @@
+import "dotenv/config";
 import express, { Request, Response } from "express";
 import cors from "cors";
 import { connectDB, Product } from "./db.js";
@@ -7,6 +8,22 @@ const PORT = process.env.PORT || 5001;
 
 app.use(cors());
 app.use(express.json());
+
+// Root & health check routes
+app.get("/", (req: Request, res: Response) => {
+  res.status(200).json({
+    status: "ok",
+    message: "Product API is up and running",
+  });
+});
+
+app.get("/api/health", (req: Request, res: Response) => {
+  res.status(200).json({
+    status: "ok",
+    uptime: process.uptime(),
+    timestamp: new Date().toISOString(),
+  });
+});
 
 app.get("/api/products", async (req: Request, res: Response): Promise<any> => {
   try {
@@ -70,6 +87,35 @@ app.post("/api/products", async (req: Request, res: Response): Promise<any> => {
     return res.status(201).json({
       message: "Product created successfully",
       product: newProduct,
+    });
+  } catch (error: any) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+});
+
+app.post("/api/products/seed", async (req: Request, res: Response): Promise<any> => {
+  try {
+    const { products } = req.body;
+
+    if (!Array.isArray(products) || products.length === 0) {
+      return res.status(400).json({
+        message: "Products array is required for seeding",
+      });
+    }
+
+    const created = await Product.bulkCreate(
+      products.map((p: { name: string; price: number }) => ({
+        name: p.name,
+        price: Number(p.price),
+      }))
+    );
+
+    return res.status(201).json({
+      message: "Products seeded successfully",
+      count: created.length,
+      products: created,
     });
   } catch (error: any) {
     return res.status(500).json({
