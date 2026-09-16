@@ -331,6 +331,39 @@ export default function Home() {
         <path d="m19 17 1 2.5 2.5.5-2.5 1-1 2.5-1-2.5-2.5-1 2.5-1Z" />
       </svg>
     ),
+    Doc: () => (
+      <svg
+        width="14"
+        height="14"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z" />
+        <path d="M8 7h8" />
+        <path d="M8 11h8" />
+        <path d="M8 15h5" />
+      </svg>
+    ),
+    ExternalLink: () => (
+      <svg
+        width="12"
+        height="12"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+        <polyline points="15 3 21 3 21 9" />
+        <line x1="10" y1="14" x2="21" y2="3" />
+      </svg>
+    ),
   };
 
   return (
@@ -376,15 +409,27 @@ export default function Home() {
             Enterprise-grade catalog management powered by Express & Sequelize
           </p>
         </div>
-        <div className="flex items-center gap-2 text-xs font-bold px-3.5 py-1.5 rounded-full bg-black/5 border border-black/5 text-slate-600">
-          <span
-            className={`w-2 h-2 rounded-full relative ${
-              isConnected
-                ? "bg-emerald-500 shadow-[0_0_10px_#10b981]"
-                : "bg-rose-500 shadow-[0_0_10px_#f43f5e]"
-            }`}
-          />
-          {isConnected ? "BACKEND ONLINE" : "BACKEND OFFLINE"}
+        <div className="flex items-center gap-3">
+          <a
+            href={`${process.env.NEXT_PUBLIC_API_URL ? process.env.NEXT_PUBLIC_API_URL.replace(/\/$/, "") : "http://localhost:5001"}/api/docs`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full bg-indigo-50 border border-indigo-200/80 text-indigo-700 hover:bg-indigo-100 hover:border-indigo-300 transition-all duration-200 shadow-xs cursor-pointer"
+          >
+            <Icons.Doc />
+            <span>OpenAPI Docs</span>
+            <Icons.ExternalLink />
+          </a>
+          <div className="flex items-center gap-2 text-xs font-bold px-3.5 py-1.5 rounded-full bg-black/5 border border-black/5 text-slate-600">
+            <span
+              className={`w-2 h-2 rounded-full relative ${
+                isConnected
+                  ? "bg-emerald-500 shadow-[0_0_10px_#10b981]"
+                  : "bg-rose-500 shadow-[0_0_10px_#f43f5e]"
+              }`}
+            />
+            {isConnected ? "BACKEND ONLINE" : "BACKEND OFFLINE"}
+          </div>
         </div>
       </header>
 

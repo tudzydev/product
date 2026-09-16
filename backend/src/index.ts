@@ -1,13 +1,33 @@
 import "dotenv/config";
 import express, { Request, Response } from "express";
 import cors from "cors";
+import swaggerUi from "swagger-ui-express";
 import { connectDB, Product } from "./db.js";
+import { openapiSpec } from "./openapi.js";
 
 const app = express();
 const PORT = process.env.PORT || 5001;
 
 app.use(cors());
 app.use(express.json());
+
+// OpenAPI Documentation routes
+app.get("/api/docs.json", (req: Request, res: Response) => {
+  res.setHeader("Content-Type", "application/json");
+  res.json(openapiSpec);
+});
+
+app.use(
+  "/api/docs",
+  swaggerUi.serve,
+  swaggerUi.setup(openapiSpec, {
+    customSiteTitle: "Product API Docs - OpenAPI",
+  })
+);
+
+app.get("/docs", (req: Request, res: Response) => {
+  res.redirect("/api/docs");
+});
 
 // Root & health check routes
 app.get("/", (req: Request, res: Response) => {
