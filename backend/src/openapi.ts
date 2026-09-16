@@ -11,7 +11,7 @@ export const openapiSpec = {
   },
   servers: [
     {
-      url: "http://localhost:5001",
+      url: "https://product-dvzx.onrender.com",
       description: "Local Development Server",
     },
     {
