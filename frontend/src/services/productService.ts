@@ -2,7 +2,10 @@ import { Product } from "@/types/productType";
 
 export type { Product };
 
-const BACKEND_URL = "http://localhost:5001/api/products";
+const BACKEND_BASE_URL = process.env.NEXT_PUBLIC_API_URL
+  ? process.env.NEXT_PUBLIC_API_URL.replace(/\/$/, "")
+  : "http://localhost:5001";
+const BACKEND_URL = `${BACKEND_BASE_URL}/api/products`;
 
 export const productService = {
   async getProducts(): Promise<Product[]> {

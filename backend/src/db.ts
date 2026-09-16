@@ -1,11 +1,37 @@
+import "dotenv/config";
 import { Sequelize, DataTypes, Model, CreationOptional, InferAttributes, InferCreationAttributes } from 'sequelize';
 
-const sequelize = new Sequelize('product_db', 'postgres', 'postgres', {
-    host: 'localhost',
-    port: 5433,
-    dialect: 'postgres',
-    logging: false,
-});
+const dbUrl = process.env.DATABASE_URL_UNPOOLED || process.env.DATABASE_URL || process.env.POSTGRES_URL;
+const host = process.env.PGHOST || process.env.PGHOST_UNPOOLED || process.env.DB_HOST || "localhost";
+const isRemote = Boolean((dbUrl && !dbUrl.includes("localhost") && !dbUrl.includes("127.0.0.1")) || (host && host !== "localhost" && host !== "127.0.0.1"));
+
+const sslConfig = isRemote
+  ? {
+      ssl: {
+        require: true,
+        rejectUnauthorized: false,
+      },
+    }
+  : {};
+
+const sequelize = dbUrl
+  ? new Sequelize(dbUrl, {
+      dialect: "postgres",
+      logging: false,
+      dialectOptions: sslConfig,
+    })
+  : new Sequelize(
+      process.env.PGDATABASE || process.env.DB_NAME || "product_db",
+      process.env.PGUSER || process.env.DB_USER || "postgres",
+      process.env.PGPASSWORD || process.env.DB_PASSWORD || "postgres",
+      {
+        host,
+        port: Number(process.env.PGPORT || process.env.DB_PORT) || (isRemote ? 5432 : 5433),
+        dialect: "postgres",
+        logging: false,
+        dialectOptions: sslConfig,
+      }
+    );
 
 export interface ProductModel extends Model<InferAttributes<ProductModel>, InferCreationAttributes<ProductModel>> {
     id: CreationOptional<number>;
