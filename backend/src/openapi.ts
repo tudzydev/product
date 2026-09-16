@@ -11,11 +11,11 @@ export const openapiSpec = {
   },
   servers: [
     {
-      url: "https://product-dvzx.onrender.com",
+      url: "http://localhost:5001",
       description: "Local Development Server",
     },
     {
-      url: "/",
+      url: "https://product-dvzx.onrender.com",
       description: "Current Host / Relative Path",
     },
   ],
